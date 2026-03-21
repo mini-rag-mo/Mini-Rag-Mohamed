@@ -12,6 +12,9 @@ class Settings(BaseSettings):
     MONGODB_URL: str
     MONGODB_DATABASE: str
 
+    GENERATION_BACKEND: str = None
+    EMBEDDING_BACKEND: str = None
+
     OPENAI_API_KEY: str = None
     OPENAI_API_URL: str = None
     COHERE_API_KEY: str = None

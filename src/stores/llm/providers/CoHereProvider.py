@@ -81,7 +81,7 @@ class CoHereProvider(LLMInterface):
 
         response = self.client.embed(
             model = self.embedding_model_id,
-            text = [self.process_text(text)],
+            texts = [self.process_text(text)],
             input_type = input_type,
             embedding_types = ['float'],
         )

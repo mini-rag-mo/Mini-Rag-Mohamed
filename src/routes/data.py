@@ -13,9 +13,7 @@ from models.AssetModel import AssetModel
 from models.db_schemes import DataChunk, Asset
 from models.enums.AssetTypeEnum import AssetTypeEnum
 
-
 logger = logging.getLogger('uvicorn.error')
-
 
 data_router = APIRouter(
     prefix="/api/v1/data",
