@@ -4,9 +4,16 @@ My own Mini Rag
 
 This is minimal implementation of the RAG model for question answering.
 
-# Requirements
+# ## Requirements
 
 - Python 3.8 or later
+
+#### Install Dependencies
+
+```bash
+sudo apt update
+sudo apt install libpq-dev gcc python3-dev
+```
 
 #### Install Python using MiniConda
 
@@ -28,6 +35,10 @@ $ conda activate mini-rag
 ```bash
 export PS1="\[\033[01;32m\]\u@\h:\w\n\[\033[00m\]\$ "
 ```
+
+### (Optional) Run Ollama Local LLM Server using Colab + Ngrok
+
+- Check the [notebook](https://colab.research.google.com/drive/1KNi3-9KtP-k-93T3wRcmRe37mRmGhL9p?usp=sharing) + [Video](https://youtu.be/-epZ1hAAtrs)
 
 ## Installation
 
