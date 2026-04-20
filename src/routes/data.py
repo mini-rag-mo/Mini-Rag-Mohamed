@@ -14,6 +14,8 @@ from models.db_schemes import DataChunk, Asset
 from models.enums.AssetTypeEnum import AssetTypeEnum
 from controllers import NLPController
 
+from uuid import UUID, uuid4
+
 logger = logging.getLogger('uvicorn.error')
 
 data_router = APIRouter(
@@ -21,9 +23,11 @@ data_router = APIRouter(
     tags=['api_v1','data'],
 )
 
-@data_router.post('/upload/{project_id}')
-async def upload_data(request: Request, project_id: int, file: UploadFile,
+@data_router.post('/upload')
+async def upload_data(request: Request, file: UploadFile,
                        app_settings: Settings=Depends(get_settings)):
+    
+    project_id = uuid4()  # auto-generate UUID
     
     project_model = await ProjectModel.create_instance(
         db_client=request.app.db_client
@@ -84,13 +88,14 @@ async def upload_data(request: Request, project_id: int, file: UploadFile,
     return JSONResponse(
             content={
                 'signal': ResponseSignal.FILE_UPLOAD_SUCCESS.value,
+                'project_id': str(project.project_id),
                 'file_id': str(asset_record.asset_id),
             }
         )
 
 
 @data_router.post('/process/{project_id}')
-async def process_endpoint(request: Request, project_id: int, process_request: ProcessRequest):
+async def process_endpoint(request: Request, project_id: UUID, process_request: ProcessRequest):
     
     chunk_size = process_request.chunk_size
     overlap_size = process_request.overlap_size

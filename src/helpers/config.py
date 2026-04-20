@@ -16,6 +16,8 @@ class Settings(BaseSettings):
     POSTGRES_PORT: int
     POSTGRES_MAIN_DATABASE: str
 
+    POSTGRES_URL: str = None
+
     GENERATION_BACKEND: str = None
     EMBEDDING_BACKEND: str = None
 

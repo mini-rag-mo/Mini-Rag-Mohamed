@@ -11,6 +11,8 @@ POSTGRES_HOST="pgvector"
 POSTGRES_PORT=5432
 POSTGRES_MAIN_DATABASE="minirag"
 
+POSTGRES_URL=""
+
 # ========================= LLM Config =========================
 GENERATION_BACKEND = "OPENAI"
 EMBEDDING_BACKEND = "COHERE"
