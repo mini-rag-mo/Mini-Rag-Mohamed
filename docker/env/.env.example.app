@@ -11,6 +11,8 @@ POSTGRES_HOST="pgvector"
 POSTGRES_PORT=5432
 POSTGRES_MAIN_DATABASE="minirag"
 
+POSTGRES_URL=""
+
 # ========================= LLM Config =========================
 GENERATION_BACKEND = "OPENAI"
 EMBEDDING_BACKEND = "COHERE"
@@ -19,7 +21,7 @@ OPENAI_API_KEY="key___"
 OPENAI_API_URL= ""
 COHERE_API_KEY="key___"
 
-GENERATION_MODEL_ID_LITERAL = ["gpt-4o-mini", "gemma2:9b-instruct-q5_0"]
+GENERATION_MODEL_ID_LITERAL = ["gpt-4o-mini", "gemma2:9b-instruct-q5_0/command-r-plus"]
 GENERATION_MODEL_ID="gpt-4o-mini"
 EMBEDDING_MODEL_ID="embed-multilingual-v3.0"
 EMBEDDING_MODEL_SIZE=1024

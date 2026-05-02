@@ -16,7 +16,7 @@ class NLPController(BaseController):
         self.template_parser = template_parser
 
     def create_collection_name(self, project_id: str):
-        return f"collection_{self.vectordb_client.default_vector_size}_{project_id}".strip()
+        return f"collection_{self.vectordb_client.default_vector_size}_{str(project_id).replace('-', '_')}".strip()
     
     async def reset_vector_db_collection(self, project: Project):
         collection_name = self.create_collection_name(project_id=project.project_id)

@@ -17,7 +17,7 @@ class Asset(SQLAlchemyBase):
     asset_size = Column(Integer, nullable=False)
     asset_config = Column(JSONB, nullable=True)
 
-    asset_project_id = Column(Integer, ForeignKey("projects.project_id"), nullable=False)
+    asset_project_id = Column(UUID(as_uuid=True), ForeignKey("projects.project_id"), nullable=False)
 
     created_at = Column(DateTime(timezone=True), server_default=func.now(), nullable=False)
     updated_at = Column(DateTime(timezone=True), onupdate=func.now(), nullable=True)
