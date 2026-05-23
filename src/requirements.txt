@@ -25,3 +25,5 @@ langchain-openai==0.0.5
 prometheus-client==0.21.1
 starlette-exporter==0.23.0
 fastapi-health==0.4.0
+
+langchain-google-genai==0.0.11
