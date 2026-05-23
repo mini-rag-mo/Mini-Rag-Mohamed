@@ -67,9 +67,11 @@ async def start_interview(request: Request, project_id: UUID, file: UploadFile):
         qa = RetrievalQA.from_chain_type(llm=llm, retriever=retriever)
 
         result = qa.run(
-            "Based on this CV, generate exactly 5 technical interview questions. "
-            "Return ONLY a JSON array of 5 strings, no extra text. Example: [\"Q1\", \"Q2\", \"Q3\", \"Q4\", \"Q5\"]"
-        )
+    "Based on this CV, generate exactly 5 technical interview questions. "
+    "Return ONLY a JSON array of 5 objects, no extra text. Each object must have exactly two fields: "
+    "'QuestionText' (the question) and 'ExpectedKeyPoints' (comma-separated key points the answer should cover). "
+    "Example: [{\"QuestionText\": \"Q1?\", \"ExpectedKeyPoints\": \"point1, point2, point3\"}, ...]"
+)
 
         questions = json.loads(result.strip())
 
