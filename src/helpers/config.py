@@ -20,9 +20,10 @@ class Settings(BaseSettings):
     GENERATION_BACKEND: str | None = None
     EMBEDDING_BACKEND: str | None = None
 
-    OPENAI_API_KEY: str | None = None
-    OPENAI_API_URL: str | None = None
-    COHERE_API_KEY: str | None = None
+    OPENAI_API_KEY: str = None
+    OPENAI_API_URL: str = None
+    COHERE_API_KEY: str = None
+    GEMINI_API_KEY: str = None
 
     GENERATION_MODEL_ID_LITERAL: List[str] | None = None
     GENERATION_MODEL_ID: str | None = None
