@@ -1,4 +1,4 @@
-from fastapi import APIRouter, UploadFile, Request, status
+from fastapi import APIRouter, UploadFile, Request, status, Form
 from fastapi.responses import JSONResponse
 from uuid import UUID
 import fitz
@@ -21,7 +21,8 @@ interview_router = APIRouter(
 )
 
 @interview_router.post("/start/{project_id}")
-async def start_interview(request: Request, project_id: UUID, file: UploadFile):
+async def start_interview(request: Request, project_id: UUID, file: UploadFile,
+                          job_title: str = Form(...), job_description: str = Form(...)):
     try:
         pdf_bytes = await file.read()
         doc = fitz.open(stream=pdf_bytes, filetype="pdf")
@@ -55,15 +56,28 @@ async def start_interview(request: Request, project_id: UUID, file: UploadFile):
             convert_system_message_to_human=True,
         )
 
-        retriever = vectorstore.as_retriever()
-        qa = RetrievalQA.from_chain_type(llm=llm, retriever=retriever)
+        retriever = vectorstore.as_retriever(search_kwargs={"k": 5})
+        docs = retriever.get_relevant_documents(job_description)
+        cv_context = "\n".join([doc.page_content for doc in docs])
 
-        result = qa.run(
-            "Based on this CV, generate exactly 5 technical interview questions. "
-            "Return ONLY a JSON array of 5 objects, no extra text. Each object must have exactly two fields: "
-            "'QuestionText' (the question) and 'ExpectedKeyPoints' (comma-separated key points the answer should cover). "
+        # Step 5: Smart Conditional Prompt
+        prompt_text = (
+            f"Job Title: {job_title}\n"
+            f"Job Description: {job_description}\n\n"
+            f"Candidate CV Context:\n{cv_context}\n\n"
+            "INSTRUCTIONS:\n"
+            "1. First, assess if the candidate's CV is relevant to the Job Description.\n"
+            "2. IF THE CV IS RELEVANT: Generate 5 technical questions that blend the candidate's specific CV experience/skills with the job requirements.\n"
+            "3. IF THE CV IS COMPLETELY UNRELATED: IGNORE the CV entirely. Generate 5 fundamental technical questions strictly based on the Job Description to test their baseline knowledge for this role.\n\n"
+            "OUTPUT FORMAT:\n"
+            "Return ONLY a valid JSON array of 5 objects. Do not include markdown formatting (like ```json), do not include any extra text or explanations. Each object must have exactly two fields:\n"
+            "- 'QuestionText': The interview question.\n"
+            "- 'ExpectedKeyPoints': Comma-separated key points the answer should cover.\n"
             "Example: [{\"QuestionText\": \"Q1?\", \"ExpectedKeyPoints\": \"point1, point2, point3\"}, ...]"
         )
+
+        result = llm.predict(prompt_text)
+
         clean_result = result.strip()
         if clean_result.startswith("```"):
             clean_result = clean_result.split("```")[1]
