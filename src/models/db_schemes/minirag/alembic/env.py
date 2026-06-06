@@ -4,11 +4,17 @@ from sqlalchemy import engine_from_config
 from sqlalchemy import pool
 from schemes import SQLAlchemyBase
 
+import os
 from alembic import context
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
 config = context.config
+
+
+# ✅ FORCE Alembic to use Neon cloud URL from HF Secrets
+# This overrides whatever is in alembic.ini
+config.set_main_option("sqlalchemy.url", os.environ["POSTGRES_URL"])
 
 # Interpret the config file for Python logging.
 # This line sets up loggers basically.
