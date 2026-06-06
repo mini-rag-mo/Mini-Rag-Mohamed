@@ -18,12 +18,7 @@ class Settings(BaseSettings):
 
     POSTGRES_URL: str = None
 
-    @property
-    def DATABASE_URL(self) -> str:
-        """Return cloud URL if available, otherwise fall back to local assembly"""
-        if self.POSTGRES_URL:
-            return self.POSTGRES_URL
-        return f"postgresql://{self.POSTGRES_USERNAME}:{self.POSTGRES_PASSWORD}@{self.POSTGRES_HOST}:{self.POSTGRES_PORT}/{self.POSTGRES_MAIN_DATABASE}"
+    
 
     GENERATION_BACKEND: str = None
     EMBEDDING_BACKEND: str = None
