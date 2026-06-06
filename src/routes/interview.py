@@ -57,7 +57,7 @@ async def start_interview(request: Request, project_id: UUID, file: UploadFile,
         )
 
         retriever = vectorstore.as_retriever(search_kwargs={"k": 5})
-        docs = retriever.get_relevant_documents(job_description)
+        docs = retriever.get_relevant_documents(f"{job_title} {job_description}")
         cv_context = "\n".join([doc.page_content for doc in docs])
 
         # Step 5: Smart Conditional Prompt
@@ -66,11 +66,13 @@ async def start_interview(request: Request, project_id: UUID, file: UploadFile,
             f"Job Description: {job_description}\n\n"
             f"Candidate CV Context:\n{cv_context}\n\n"
             "INSTRUCTIONS:\n"
-            "1. First, assess if the candidate's CV is relevant to the Job Description.\n"
-            "2. IF THE CV IS RELEVANT: Generate 5 technical questions that blend the candidate's specific CV experience/skills with the job requirements.\n"
-            "3. IF THE CV IS COMPLETELY UNRELATED: IGNORE the CV entirely. Generate 5 fundamental technical questions strictly based on the Job Description to test their baseline knowledge for this role.\n\n"
+            "1. Assess whether the candidate's CV is relevant to the Job Description.\n"
+            "2. IF RELEVANT: Generate 5 technical interview questions that combine the candidate's specific experience and skills with the job requirements.\n"
+            "3. IF UNRELATED OR CV IS EMPTY: Ignore the CV entirely. Generate 5 fundamental technical questions based solely on the Job Description to assess baseline knowledge for this role.\n"
+            "4. Never mix both approaches — choose one based on your assessment.\n\n"
             "OUTPUT FORMAT:\n"
-            "Return ONLY a valid JSON array of 5 objects. Do not include markdown formatting (like ```json), do not include any extra text or explanations. Each object must have exactly two fields:\n"
+            "Return ONLY a valid JSON array of 5 objects. No markdown, no extra text.\n"
+            "Each object must have exactly:\n"
             "- 'QuestionText': The interview question.\n"
             "- 'ExpectedKeyPoints': Comma-separated key points the answer should cover.\n"
             "Example: [{\"QuestionText\": \"Q1?\", \"ExpectedKeyPoints\": \"point1, point2, point3\"}, ...]"
